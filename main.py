@@ -25,15 +25,16 @@ for fileName in inputFiles:
 
 	if CheckImageExists(workingDirectory + "/input/" + fileName) == True:
 
-		productCode = GetProductCode(fileName)
-		CheckDirectoryExists(workingDirectory + "/output/" + productCode)
-
-		background = Image.new('RGB', (backgroundWidth, backgroundHeight), (255, 255, 255))
-		# Creates a white image
-
+		#productCode = GetProductCode(fileName)
+		# CheckDirectoryExists(workingDirectory + "/output/" + productCode)
 		product = Image.open(workingDirectory + "/input/" + fileName)
 
-		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product)
+		backgroundColour = FindBackgroundColour(product)
+		r, g, b = SeperateRGB(backgroundColour)
+		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
+		# Creates a solid colour for a background
+
+		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product, r, g, b)
 
 		if topPixel and bottomPixel and leftPixel and rightPixel != (0, 0):
 			product = CropImage(topPixel, bottomPixel, leftPixel, rightPixel, product)
@@ -61,7 +62,7 @@ for fileName in inputFiles:
 			else:
 				print("Logo does not fit onto background!")
 
-		background.save(workingDirectory + '/output/' + productCode + "/" + fileName)
+		background.save(workingDirectory + '/output/' + fileName, quality = 100)
 		# Saves the image to the output folder
 		background.close()
 
