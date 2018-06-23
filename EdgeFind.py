@@ -51,7 +51,7 @@ def FindEdges(threshold, image, r, g, b):
 def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
 	imageWidth, imageHeight = image.size
 	image = image.crop((round(leftPixel[0] - 0.01 * imageWidth), 
-		round(topPixel[1] - 0.01 * imageHeight), 
+		round(topPixel[1] + 0.01 * imageHeight), 
 		round(rightPixel[0] + 0.01 * imageWidth), 
 		round(bottomPixel[1] + 0.01 * imageHeight)))
 	return image
