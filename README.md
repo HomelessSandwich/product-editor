@@ -9,7 +9,7 @@ It will then detect the background of the picture, scale the picture to fit a sp
 ## Installating/Running the Project
 
 * You will need to have the pillow library installed
-* Downloading or cloning the repository
+* Download or clone the repository
 * Place the photos you want editing into the input folder
 * Place your logo into the logos folder and name it 'logo.png'
 * Run main.py
