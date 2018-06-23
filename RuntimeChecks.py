@@ -30,7 +30,7 @@ def GetUserInputs():
 				raise ValueError
 
 			print("\n0 is very unsensisitive and 1 is very sensitive (use a value close to 1 if the object is close in colour to the background)")
-			tolerance = float(input("Please enter a tolerance between 0 and 1: "))
+			tolerance = float(input("Please enter a tolerance between 0 and 1 (recommened 0.8 for most images): "))
 			if tolerance > 1 or tolerance < 0:
 				raise ValueError
 				
