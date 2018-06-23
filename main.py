@@ -32,39 +32,25 @@ for fileName in inputFiles:
 		backgroundColour = FindBackgroundColour(product)
 		r, g, b = SeperateRGB(backgroundColour)
 
+		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
+		# Creates a solid colour for a background
+
 		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product, r, g, b)
 
 		if topPixel and bottomPixel and leftPixel and rightPixel != (0, 0):
 			product = CropImage(topPixel, bottomPixel, leftPixel, rightPixel, product)
 			# Crops the image down to the edges of the product
 
-		product.thumbnail((int(backgroundWidth * 0.8), int(backgroundHeight * 0.8)), Image.ANTIALIAS)
-		# Scales the image, whilst maintaining the aspect ratio
-		# int is used instead of rounding, as it's quicker
+		scaledImage = ScaleImage(product, backgroundWidth, backgroundHeight)
 
-		productWidth, productHeight = product.size
-		locationX = int(backgroundWidth / 2 - productWidth / 2)
-		locationY = int(backgroundHeight / 2 - productHeight / 2)
-		# Finds the location on the blank canvas to centre the scaled image
+		##############
+		# TEST TO SEE IF SCALE FUNCTION IS BETTER THEN THUMBNAIL IIN TERMS OF QUAL.!
+		##############
 
-		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
-		# Creates a solid colour for a background
+		#blendedImage = BlendBackgrounds(scaledImage, backgroundColour)
 
-		background.paste(product, (locationX, locationY))
-		# Pastes the product onto the white background
-		product.close()
-
-		#########################################
-		# NEED TO SCALE WITH THE THUMBNAIL FOR THE BLENDING TO BE IN CORRECT POS.!!!
-		#########################################
-		#background.show()
-
-		#background = BlendBackgrounds(background, topPixel, bottomPixel, leftPixel, rightPixel, backgroundColour)
-
-		#background.show()
-
-
-
+		editedImage = CentreImage(background, scaledImage)
+		# Pastes and centres the product onto the background
 
 		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False) == True:
 			if (logoWidth <= backgroundWidth) and (logoHeight <= backgroundHeight): 
@@ -74,9 +60,15 @@ for fileName in inputFiles:
 			else:
 				print("Logo does not fit onto background!")
 
-		background.save(workingDirectory + '/output/' + fileName, quality = 100)
+		editedImage.save(workingDirectory + '/output/' + fileName, quality = 100)
 		# Saves the image to the output folder
 		background.close()
+
+
+
+		#CLOSE ALL PICTURES!!!!!
+
+
 
 		numEdited += 1
 		print(fileName + " has been edited and saved!")
