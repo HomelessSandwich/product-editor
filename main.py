@@ -24,16 +24,11 @@ for fileName in inputFiles:
 
 	if CheckImageExists(workingDirectory + "/input/" + fileName) == True:
 
-		#productCode = GetProductCode(fileName)
-		# CheckDirectoryExists(workingDirectory + "/output/" + productCode)
 		product = Image.open(workingDirectory + "/input/" + fileName)
 		productWidth, productHeight = product.size
 
-		backgroundColour = FindBackgroundColour(product)
+		backgroundColour = GetBackgroundColour(product)
 		r, g, b = SeperateRGB(backgroundColour)
-
-		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
-		# Creates a solid colour for a background
 
 		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product, r, g, b)
 
@@ -43,26 +38,18 @@ for fileName in inputFiles:
 
 		scaledImage = ScaleImage(product, backgroundWidth, backgroundHeight)
 
-		##############
-		# TEST TO SEE IF SCALE FUNCTION IS BETTER THEN THUMBNAIL IIN TERMS OF QUAL.!
-		##############
-
-		#blendedImage = BlendBackgrounds(scaledImage, backgroundColour)
-
-		editedImage = CentreImage(background, scaledImage)
-		# Pastes and centres the product onto the background
+		blendedImage = BlendBackgrounds(scaledImage, backgroundWidth, backgroundHeight)
 
 		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False) == True:
 			if (logoWidth <= backgroundWidth) and (logoHeight <= backgroundHeight): 
-				background.paste(logo, (backgroundWidth - logoWidth, backgroundHeight - logoHeight))
+				blendedImage.paste(logo, (backgroundWidth - logoWidth, backgroundHeight - logoHeight))
 				# Pastes the logo onto the bottom right corner
 				# Checks to see if the logo fits onto the background
 			else:
 				print("Logo does not fit onto background!")
 
-		editedImage.save(workingDirectory + '/output/' + fileName, quality = 100)
+		blendedImage.save(workingDirectory + '/output/' + fileName, quality = 100)
 		# Saves the image to the output folder
-		background.close()
 
 
 
