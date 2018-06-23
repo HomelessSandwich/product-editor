@@ -52,6 +52,13 @@ def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
 	image = image.crop((leftPixel[0], topPixel[1], rightPixel[0], bottomPixel[1]))
 	return image
 
+def BufferImage(topPixel, bottomPixel, leftPixel, rightPixel, imageWidth, imageHeight):
+	topPixel = (topPixel[0], round(topPixel[1] - 0.01 * imageHeight)) 
+	bottomPixel = (bottomPixel[0], round(bottomPixel[1] + 0.01 * imageHeight)) 
+	leftPixel = (round(leftPixel[0] - 0.01 * imageWidth), leftPixel[1])
+	rightPixel = (round(rightPixel[0] + 0.01 * imageWidth), leftPixel[1])
+	return topPixel, bottomPixel, leftPixel, rightPixel
+
 def FindBackgroundColour(image):
 	imageWidth, imageHeight = image.size
 	redPixels = []
@@ -59,25 +66,25 @@ def FindBackgroundColour(image):
 	bluePixels = []
 
 	for x in range(imageWidth - 1):
-		r, g, b = image.getpixel((x, 0))	
-		redPixels.append(r)
-		greenPixels.append(g)
-		bluePixels.append(b)
+		pixel = image.getpixel((x, 0))	
+		redPixels.append(pixel[0])
+		greenPixels.append(pixel[1])
+		bluePixels.append(pixel[2])
 	for x in range(imageWidth - 1):
-		r, g, b = image.getpixel((x, imageHeight - 1))	
-		redPixels.append(r)
-		greenPixels.append(g)
-		bluePixels.append(b)
+		pixel = image.getpixel((x, imageHeight - 1))	
+		redPixels.append(pixel[0])
+		greenPixels.append(pixel[1])
+		bluePixels.append(pixel[2])
 	for y in range(imageHeight - 1):
-		r, g, b = image.getpixel((0, y))	
-		redPixels.append(r)
-		greenPixels.append(g)
-		bluePixels.append(b)
+		pixel = image.getpixel((0, y))	
+		redPixels.append(pixel[0])
+		greenPixels.append(pixel[1])
+		bluePixels.append(pixel[2])
 	for y in range(imageHeight - 1):
-		r, g, b = image.getpixel((imageWidth - 1, y))	
-		redPixels.append(r)
-		greenPixels.append(g)
-		bluePixels.append(b)
+		pixel = image.getpixel((imageWidth - 1, y))	
+		redPixels.append(pixel[0])
+		greenPixels.append(pixel[1])
+		bluePixels.append(pixel[2])
 
 	averagePixel = (round(sum(redPixels) / len(redPixels)), round(sum(greenPixels) / len(greenPixels)), round(sum(bluePixels) / len(bluePixels)))
 	return averagePixel

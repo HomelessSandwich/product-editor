@@ -28,6 +28,7 @@ for fileName in inputFiles:
 		#productCode = GetProductCode(fileName)
 		# CheckDirectoryExists(workingDirectory + "/output/" + productCode)
 		product = Image.open(workingDirectory + "/input/" + fileName)
+		productWidth, productHeight = product.size
 
 		backgroundColour = FindBackgroundColour(product)
 		r, g, b = SeperateRGB(backgroundColour)
@@ -37,6 +38,7 @@ for fileName in inputFiles:
 		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product, r, g, b)
 
 		if topPixel and bottomPixel and leftPixel and rightPixel != (0, 0):
+			topPixel, bottomPixel, leftPixel, rightPixel = BufferImage(topPixel, bottomPixel, leftPixel, rightPixel, productWidth, productHeight)
 			product = CropImage(topPixel, bottomPixel, leftPixel, rightPixel, product)
 			# Crops the image down to the edges of the product
 
