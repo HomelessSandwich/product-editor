@@ -32,13 +32,10 @@ for fileName in inputFiles:
 
 		backgroundColour = FindBackgroundColour(product)
 		r, g, b = SeperateRGB(backgroundColour)
-		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
-		# Creates a solid colour for a background
 
 		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product, r, g, b)
 
 		if topPixel and bottomPixel and leftPixel and rightPixel != (0, 0):
-			topPixel, bottomPixel, leftPixel, rightPixel = BufferImage(topPixel, bottomPixel, leftPixel, rightPixel, productWidth, productHeight)
 			product = CropImage(topPixel, bottomPixel, leftPixel, rightPixel, product)
 			# Crops the image down to the edges of the product
 
@@ -51,6 +48,8 @@ for fileName in inputFiles:
 		locationY = int(backgroundHeight / 2 - productHeight / 2)
 		# Finds the location on the blank canvas to centre the scaled image
 
+		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
+		# Creates a solid colour for a background
 		background.paste(product, (locationX, locationY))
 		# Pastes the product onto the white background
 

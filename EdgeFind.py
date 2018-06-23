@@ -49,15 +49,12 @@ def FindEdges(threshold, image, r, g, b):
 	return topPixel, bottomPixel, leftPixel, rightPixel
 
 def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
-	image = image.crop((leftPixel[0], topPixel[1], rightPixel[0], bottomPixel[1]))
+	imageWidth, imageHeight = image.size
+	image = image.crop((round(leftPixel[0] - 0.01 * imageWidth), 
+		round(topPixel[1] - 0.01 * imageHeight), 
+		round(rightPixel[0] + 0.01 * imageWidth), 
+		round(bottomPixel[1] + 0.01 * imageHeight)))
 	return image
-
-def BufferImage(topPixel, bottomPixel, leftPixel, rightPixel, imageWidth, imageHeight):
-	topPixel = (topPixel[0], round(topPixel[1] - 0.01 * imageHeight)) 
-	bottomPixel = (bottomPixel[0], round(bottomPixel[1] + 0.01 * imageHeight)) 
-	leftPixel = (round(leftPixel[0] - 0.01 * imageWidth), leftPixel[1])
-	rightPixel = (round(rightPixel[0] + 0.01 * imageWidth), leftPixel[1])
-	return topPixel, bottomPixel, leftPixel, rightPixel
 
 def FindBackgroundColour(image):
 	imageWidth, imageHeight = image.size
