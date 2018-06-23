@@ -8,7 +8,6 @@ from EdgeFind import *
 from RuntimeChecks import *
 
 numEdited = 0
-threshold = 0.8
 workingDirectory = GetWorkingDirectory()
 DirectoryCheck(workingDirectory)
 inputFiles = GetInputFiles()
@@ -17,7 +16,7 @@ if CheckImageExists(workingDirectory + "/logos/logo.png") == True:
 	logo = Image.open(workingDirectory + "/logos/logo.png")
 	logoWidth, logoHeight = logo.size
 
-backgroundHeight, backgroundWidth = GetUserInputs()
+backgroundHeight, backgroundWidth, threshold = GetUserInputs()
 
 
 for fileName in inputFiles:

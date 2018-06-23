@@ -24,15 +24,23 @@ def GetUserInputs():
 			backgroundHeight = int(input("\nPlease enter the height (in pixels) for your edited images: "))
 			if backgroundHeight > 10000 or backgroundHeight < 1:
 				raise ValueError
+
 			backgroundWidth = int(input("Please enter the width (in pixels) for your edited images: "))
-			# Asks the user for the height and width (in pixels) 
 			if backgroundWidth > 10000 or backgroundWidth < 1:
 				raise ValueError
+
+			print("\n0 is very unsensisitive and 1 is very sensitive (use a value close to 1 if the object is close in colour to the background)")
+			tolerance = float(input("Please enter a tolerance between 0 and 1: "))
+			if tolerance > 1 or tolerance < 0:
+				raise ValueError
+				
+			print("\n")
 			break
 		except ValueError:
 			print("\nOops! That was not a valid number. Try again...")
 			# Throws an error if the user did not enter an integer
-	return backgroundHeight, backgroundWidth
+
+	return backgroundHeight, backgroundWidth, tolerance
 
 def GetProductCode(fileName):
 	return (fileName.split("-"))[0]
