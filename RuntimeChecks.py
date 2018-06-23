@@ -2,8 +2,7 @@ import os
 from PIL import Image
 
 def GetWorkingDirectory():
-	here = os.path.dirname(os.path.abspath(__file__))
-	return here
+	return os.path.dirname(os.path.abspath(__file__))
 	# Gets the working directory - avoids any issues that may occur
 
 def CheckDirectoryExists(directory):
@@ -17,9 +16,7 @@ def DirectoryCheck(directory):
 	# Checks to see if there is an input and output, if not, it creates them
 
 def GetInputFiles():
-	here = GetWorkingDirectory()
-	inputFiles = os.listdir(here + "/input")
-	return inputFiles
+	return os.listdir(GetWorkingDirectory() + "/input")
 
 def GetUserInputs():
 	while True:
@@ -38,8 +35,7 @@ def GetUserInputs():
 	return backgroundHeight, backgroundWidth
 
 def GetProductCode(fileName):
-	productCode = (fileName.split("-"))[0]
-	return productCode
+	return (fileName.split("-"))[0]
 
 def CheckImageExists(directory, debug = True):
 		if os.path.exists(directory) and (directory.endswith(".jpg") or directory.endswith(".jpeg") or directory.endswith(".png")):

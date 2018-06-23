@@ -50,10 +50,15 @@ def FindEdges(threshold, image, r, g, b):
 
 def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
 	imageWidth, imageHeight = image.size
-	image = image.crop((round(leftPixel[0] - 0.01 * imageWidth), 
-		round(topPixel[1] + 0.01 * imageHeight), 
-		round(rightPixel[0] + 0.01 * imageWidth), 
-		round(bottomPixel[1] + 0.01 * imageHeight)))
+
+	leftPixel = (round(leftPixel[0] - 0.01 * imageWidth), leftPixel[1])
+	topPixel = (topPixel[0], round(topPixel[1] - 0.01 * imageHeight))
+	rightPixel = (round(rightPixel[0] + 0.01 * imageWidth), rightPixel[1])
+	bottomPixel = (bottomPixel[0], round(bottomPixel[1] + 0.01 * imageHeight))
+	# Buffers away from the detected edges to avoid small clipping
+
+	image = image.crop((leftPixel[0], topPixel[1], rightPixel[0], bottomPixel[1]))
+	#"The crop rectangle, as a (left, upper, right, lower)-tuple."
 	return image
 
 def FindBackgroundColour(image):
@@ -82,6 +87,10 @@ def FindBackgroundColour(image):
 		redPixels.append(pixel[0])
 		greenPixels.append(pixel[1])
 		bluePixels.append(pixel[2])
+
+################################################
+# CREATE FUNCTION FOR THIS!!!!! AND FOR FIRST FUNCTIONS!
+################################################
 
 	averagePixel = (round(sum(redPixels) / len(redPixels)), round(sum(greenPixels) / len(greenPixels)), round(sum(bluePixels) / len(bluePixels)))
 	return averagePixel
