@@ -51,10 +51,22 @@ def FindEdges(threshold, image, r, g, b):
 def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
 	imageWidth, imageHeight = image.size
 
-	leftPixel = (round(leftPixel[0] - 0.01 * imageWidth), leftPixel[1])
-	topPixel = (topPixel[0], round(topPixel[1] - 0.01 * imageHeight))
-	rightPixel = (round(rightPixel[0] + 0.01 * imageWidth), rightPixel[1])
-	bottomPixel = (bottomPixel[0], round(bottomPixel[1] + 0.01 * imageHeight))
+	if leftPixel[0] - round(0.01 * imageWidth) >= 0:
+		leftPixel = (leftPixel[0] - round(0.01 * imageWidth), leftPixel[1])
+	else:
+		leftPixel = (0, leftPixel[1])
+	if topPixel[1] - round(0.01 * imageHeight) >= 0:
+		topPixel = (topPixel[0], topPixel[1] - round(0.01 * imageHeight))
+	else:
+		topPixel = (topPixel[0], 0)
+	if rightPixel[0] + round(0.01 * imageWidth) <= imageWidth:
+		rightPixel = (rightPixel[0] + round(0.01 * imageWidth), rightPixel[1])
+	else:
+		rightPixel = (imageWidth, rightPixel[1])
+	if bottomPixel[1] + round(0.01 * imageWidth) <= imageHeight:
+		bottomPixel = (bottomPixel[0], bottomPixel[1] + round(0.01 * imageHeight))
+	else:
+		bottomPixel = (bottomPixel[0], imageHeight)
 	# Buffers away from the detected edges to avoid small clipping
 
 	image = image.crop((leftPixel[0], topPixel[1], rightPixel[0], bottomPixel[1]))

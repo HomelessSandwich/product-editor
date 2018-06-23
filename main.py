@@ -8,7 +8,7 @@ from EdgeFind import *
 from RuntimeChecks import *
 
 numEdited = 0
-threshold = 0.95
+threshold = 0.8
 workingDirectory = GetWorkingDirectory()
 DirectoryCheck(workingDirectory)
 inputFiles = GetInputFiles()
