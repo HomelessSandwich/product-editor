@@ -1,4 +1,4 @@
-from PIL import Image, ImageOps
+from PIL import Image
 from operator import itemgetter
 
 def GetTopPixel(threshold, image, rgbImgWidth, rgbImgHeight, r, g, b):
@@ -49,26 +49,7 @@ def FindEdges(threshold, image, r, g, b):
 	return topPixel, bottomPixel, leftPixel, rightPixel
 
 def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
-	imageWidth, imageHeight = image.size
-
-	if leftPixel[0] - round(0.01 * imageWidth) >= 0:
-		leftPixel = (leftPixel[0] - round(0.01 * imageWidth), leftPixel[1])
-	else:
-		leftPixel = (0, leftPixel[1])
-	if topPixel[1] - round(0.01 * imageHeight) >= 0:
-		topPixel = (topPixel[0], topPixel[1] - round(0.01 * imageHeight))
-	else:
-		topPixel = (topPixel[0], 0)
-	if rightPixel[0] + round(0.01 * imageWidth) <= imageWidth:
-		rightPixel = (rightPixel[0] + round(0.01 * imageWidth), rightPixel[1])
-	else:
-		rightPixel = (imageWidth, rightPixel[1])
-	if bottomPixel[1] + round(0.01 * imageWidth) <= imageHeight:
-		bottomPixel = (bottomPixel[0], bottomPixel[1] + round(0.01 * imageHeight))
-	else:
-		bottomPixel = (bottomPixel[0], imageHeight)
-	# Buffers away from the detected edges to avoid small clipping
-
+	leftPixel, topPixel, rightPixel, bottomPixel = GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image)
 	image = image.crop((leftPixel[0], topPixel[1], rightPixel[0], bottomPixel[1]))
 	#"The crop rectangle, as a (left, upper, right, lower)-tuple."
 	return image
@@ -112,3 +93,42 @@ def SeperateRGB(colour):
 	g = colour[1]
 	b = colour[2]
 	return r, g, b
+
+def GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image):
+	imageWidth, imageHeight = image.size
+
+	if leftPixel[0] - round(0.01 * imageWidth) >= 0:
+		leftPixel = (leftPixel[0] - round(0.01 * imageWidth), leftPixel[1])
+	else:
+		leftPixel = (0, leftPixel[1])
+	if topPixel[1] - round(0.01 * imageHeight) >= 0:
+		topPixel = (topPixel[0], topPixel[1] - round(0.01 * imageHeight))
+	else:
+		topPixel = (topPixel[0], 0)
+	if rightPixel[0] + round(0.01 * imageWidth) <= imageWidth:
+		rightPixel = (rightPixel[0] + round(0.01 * imageWidth), rightPixel[1])
+	else:
+		rightPixel = (imageWidth, rightPixel[1])
+	if bottomPixel[1] + round(0.01 * imageWidth) <= imageHeight:
+		bottomPixel = (bottomPixel[0], bottomPixel[1] + round(0.01 * imageHeight))
+	else:
+		bottomPixel = (bottomPixel[0], imageHeight)
+	# Buffers away from the detected edges to avoid small clipping
+	return leftPixel, topPixel, rightPixel, bottomPixel
+
+def BlendBackgrounds(image, topPixel, bottomPixel, leftPixel, rightPixel, backgroundColour):
+	image = image.convert('RGB')
+	imageWidth, imageHeight = image.size
+	buffLeftPixel, buffTopPixel, buffRightPixel, buffBottomPixel = GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image)
+	backgroundSnippet = Image.new('RGB', (10, topPixel[1] - buffTopPixel[1]), backgroundColour)
+
+	test = Image.new('RGB', (10, topPixel[1] - buffTopPixel[1]), (255, 0, 0))
+
+	for x in range(0, buffRightPixel[0] - buffLeftPixel[0] + 10, 10):
+		snippet = image.crop((buffLeftPixel[0] + x, buffTopPixel[1], buffLeftPixel[0] + x + 10, buffTopPixel[1] + (topPixel[1] - buffTopPixel[1])))
+		blendedSnippet = Image.blend(snippet, backgroundSnippet, 0.5)
+		image.paste(test, (buffLeftPixel[0] + x, buffTopPixel[1]))
+
+	return image
+		
+

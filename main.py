@@ -50,10 +50,22 @@ for fileName in inputFiles:
 
 		background = Image.new('RGB', (backgroundWidth, backgroundHeight), backgroundColour)
 		# Creates a solid colour for a background
+
 		background.paste(product, (locationX, locationY))
 		# Pastes the product onto the white background
-
 		product.close()
+
+		#########################################
+		# NEED TO SCALE WITH THE THUMBNAIL FOR THE BLENDING TO BE IN CORRECT POS.!!!
+		#########################################
+		#background.show()
+
+		#background = BlendBackgrounds(background, topPixel, bottomPixel, leftPixel, rightPixel, backgroundColour)
+
+		#background.show()
+
+
+
 
 		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False) == True:
 			if (logoWidth <= backgroundWidth) and (logoHeight <= backgroundHeight): 
