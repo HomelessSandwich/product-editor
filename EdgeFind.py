@@ -116,7 +116,7 @@ def GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image):
 	# Buffers away from the detected edges to avoid small clipping
 	return leftPixel, topPixel, rightPixel, bottomPixel
 
-def BlendBackgrounds(image, topPixel, bottomPixel, leftPixel, rightPixel, backgroundColour):
+def BlendBackgrounds(image, backgroundColour):
 	image = image.convert('RGB')
 	imageWidth, imageHeight = image.size
 	buffLeftPixel, buffTopPixel, buffRightPixel, buffBottomPixel = GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image)
@@ -130,5 +130,29 @@ def BlendBackgrounds(image, topPixel, bottomPixel, leftPixel, rightPixel, backgr
 		image.paste(test, (buffLeftPixel[0] + x, buffTopPixel[1]))
 
 	return image
-		
 
+def ScaleImage(image, inputWidth, inputHeight):
+		imageWidth, imageHeight = image.size		
+
+		if imageHeight > imageWidth:
+			ratio = inputHeight / imageHeight
+			scaledHeight = inputHeight
+			scaledWidth = imageWidth * ratio
+		elif imageWidth > imageHeight:
+			ratio = inputWidth / imageWidth
+			scaledHeight = imageHeight * ratio
+			scaledWidth = inputWidth
+		else:
+			scaledHeight = inputHeight
+			scaledWidth = inputWidth
+			
+		return image.resize((round(scaledWidth * 0.8), round(scaledHeight * 0.8)), Image.LANCZOS)
+		# 0.8 multiplier to make sure there is a border between the image and the background		
+		# Scales the image, whilst maintaining the aspect ratio
+		
+def CentreImage(image, image2):
+	locationX = int(image.width / 2 - image2.width / 2)
+	locationY = int(image.height / 2 - image2.height / 2)
+	# Finds the location on the image for image2 to be centred
+	image.paste(image2, (locationX, locationY))
+	return image
