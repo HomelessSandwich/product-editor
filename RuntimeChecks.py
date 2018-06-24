@@ -49,6 +49,6 @@ def CheckImageExists(directory, debug = True):
 		if os.path.exists(directory) and (directory.endswith(".jpg") or directory.endswith(".jpeg") or directory.endswith(".png")):
 			return True
 		else:
-			if debug == True:
+			if debug:
 				print(directory + " cannot be found or the image is not in the JPEG or PNG format!")
 			return False

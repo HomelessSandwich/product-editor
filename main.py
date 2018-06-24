@@ -9,10 +9,12 @@ from RuntimeChecks import *
 
 numEdited = 0
 workingDirectory = GetWorkingDirectory()
-DirectoryCheck(workingDirectory)
+CheckDirectoryExists(workingDirectory + "/input")
+CheckDirectoryExists(workingDirectory + "/output")
+CheckDirectoryExists(workingDirectory + "/logos")
 inputFiles = GetInputFiles()
 
-if CheckImageExists(workingDirectory + "/logos/logo.png") == True:
+if CheckImageExists(workingDirectory + "/logos/logo.png"):
 	logo = Image.open(workingDirectory + "/logos/logo.png")
 	logoWidth, logoHeight = logo.size
 
@@ -22,7 +24,7 @@ backgroundHeight, backgroundWidth, threshold = GetUserInputs()
 for fileName in inputFiles:
 	# Iterates through all the files within the input folder
 
-	if CheckImageExists(workingDirectory + "/input/" + fileName) == True:
+	if CheckImageExists(workingDirectory + "/input/" + fileName):
 
 		image = Image.open(workingDirectory + "/input/" + fileName)
 
@@ -39,7 +41,7 @@ for fileName in inputFiles:
 
 		image = BlendBackgrounds(image, backgroundWidth, backgroundHeight)
 
-		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False) == True:
+		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False):
 			if (logoWidth <= backgroundWidth) and (logoHeight <= backgroundHeight): 
 				image.paste(logo, ((backgroundWidth - 1) - (logoWidth - 1) - 1, (backgroundHeight - 1) - (logoHeight - 1) - 1))
 				# Pastes the logo onto the bottom right corner
@@ -52,7 +54,8 @@ for fileName in inputFiles:
 		image.close()
 		numEdited += 1
 		print(fileName + " has been edited and saved!")
-logo.close()
+if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False):
+	logo.close()
 
 print("\n" + str(numEdited) + " files have been edited and saved!")
 # Allows the user to compare the number of edited pictures to the number of files in the input folder
