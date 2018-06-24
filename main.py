@@ -42,7 +42,7 @@ for fileName in inputFiles:
 
 		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False) == True:
 			if (logoWidth <= backgroundWidth) and (logoHeight <= backgroundHeight): 
-				blendedImage.paste(logo, (backgroundWidth - logoWidth, backgroundHeight - logoHeight))
+				blendedImage.paste(logo, ((backgroundWidth - 1) - (logoWidth - 1) - 1, (backgroundHeight - 1) - (logoHeight - 1) - 1))
 				# Pastes the logo onto the bottom right corner
 				# Checks to see if the logo fits onto the background
 			else:
@@ -50,12 +50,6 @@ for fileName in inputFiles:
 
 		blendedImage.save(workingDirectory + '/output/' + fileName, quality = 100)
 		# Saves the image to the output folder
-
-
-
-		#CLOSE ALL PICTURES!!!!!
-
-
 
 		numEdited += 1
 		print(fileName + " has been edited and saved!")

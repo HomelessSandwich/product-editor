@@ -98,7 +98,7 @@ def GetBorderPixels(image):
 
 def GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image):
 	imageWidth, imageHeight = image.size
-	borderPercentage = 0.03
+	borderPercentage = 0.05
 
 	if leftPixel[0] - round(borderPercentage * imageWidth) >= 0:
 		leftPixel = (leftPixel[0] - round(borderPercentage * imageWidth), leftPixel[1])
@@ -162,61 +162,67 @@ def ScaleImage(image, inputWidth, inputHeight):
 		# Scales the image, whilst maintaining the aspect ratio
 
 		
-def CentreImage(image, image2):
+def CentreImage(image, image2, coordinateOutput=False):
 	locationX = int(image.width / 2 - image2.width / 2)
 	locationY = int(image.height / 2 - image2.height / 2)
 	# Finds the location on image for image2 to be centred
 	image.paste(image2, (locationX, locationY))
-	return image
+
+	if coordinateOutput:
+		return image, locationX, locationY
+	else:
+		return image
 
 
 def BlendBackgrounds(image, backgroundWidth, backgroundHeight):
 	image = image.convert('RGB')
 	imageWidth, imageHeight = image.size
-	print(imageWidth)
 
-	blendLength = round((backgroundWidth - imageWidth) / 2)
-
-	borderedImage = CentreImage(Image.new('RGB', (imageWidth + blendLength * 2 + 1, imageHeight + blendLength * 2 + 1)), image)
+	borderedImage, locationX, locationY = CentreImage(Image.new('RGB', (backgroundWidth, backgroundHeight)), image, coordinateOutput = True)
 
 	for x in range(imageWidth):
 		pixel = image.getpixel((x, 0))
-		borderedImage.paste(Image.new('RGB', (1, blendLength), pixel), (blendLength + x, 0)) 
+		borderedImage.paste(Image.new('RGB', (1, locationY), pixel), (locationX + x, 0)) 
 		# Top fill
 
 		pixel = image.getpixel((x, imageHeight - 1))	
-		borderedImage.paste(Image.new('RGB', (1, blendLength), pixel), (blendLength + x, imageHeight + blendLength)) 
+		borderedImage.paste(Image.new('RGB', (1, (backgroundHeight - 1) - locationY - (imageHeight - 1)), pixel), (locationX + x, locationY + (imageHeight - 1)))
+		# Use backgroundHeight - locationY - imageHeight as we know these locations as a fact
+		# i.e. You can't rely on geometry, as the pixels may not be exactly in those locations due to pixels have non float locations
 		# Bottom fill
 
 	for y in range(imageHeight - 1):
 		pixel = image.getpixel((0, y))
-		borderedImage.paste(Image.new('RGB', (blendLength, 1), pixel), (0, blendLength + y)) 
+		borderedImage.paste(Image.new('RGB', (locationX, 1), pixel), (0, locationY + y)) 
 		# Left fill
 
 		pixel = image.getpixel((imageWidth - 1, y))	
-		borderedImage.paste(Image.new('RGB', (blendLength, 1), pixel), (imageWidth + blendLength, blendLength + y)) 
+		borderedImage.paste(Image.new('RGB', ((backgroundWidth - 1) - locationX - (imageWidth - 1), 1), pixel), (locationX + (imageWidth - 1), locationY + y)) 
 		# Right fill
 
-	cornerFillSize = (blendLength, blendLength)
-
-	pixel = borderedImage.getpixel((blendLength, blendLength))
-	borderedImage.paste(Image.new('RGB', cornerFillSize, pixel), (0, 0))
+	pixel = image.getpixel((0, 0))
+	borderedImage.paste(Image.new('RGB', (locationX, locationY), pixel), (0, 0))
 	# Top left corner fill
 
-	pixel = borderedImage.getpixel((blendLength, blendLength + imageHeight))
-	borderedImage.paste(Image.new('RGB', cornerFillSize, pixel), (0, blendLength + imageHeight - 1))
+	pixel = image.getpixel((0, imageHeight - 1))
+	borderedImage.paste(Image.new('RGB', (locationX, (backgroundHeight - 1) - locationY - (imageHeight - 1)), pixel), (0, locationY + (imageHeight - 1)))
 	# Bottom left corner fill
 
-	pixel = borderedImage.getpixel((blendLength + imageWidth, blendLength))
-	borderedImage.paste(Image.new('RGB', cornerFillSize, pixel), (blendLength + imageWidth, 0))
+	pixel = image.getpixel((imageWidth - 1, 0))	
+	borderedImage.paste(Image.new('RGB', ((backgroundWidth - 1) - locationX - (imageWidth - 1), locationY), pixel), (locationX + (imageWidth - 1), 0))
 	# Top right corner fill
 
-	pixel = borderedImage.getpixel((blendLength + imageWidth - 1, blendLength + imageHeight - 1))
-	borderedImage.paste(Image.new('RGB', cornerFillSize, pixel), (blendLength + imageWidth, blendLength + imageHeight - 1))
+	pixel = image.getpixel((imageWidth - 1, imageHeight - 1))
+	borderedImage.paste(Image.new('RGB', ((backgroundWidth - 1) - locationX - (imageWidth - 1), (backgroundHeight - 1) - locationY - (imageHeight - 1)), pixel), (locationX + (imageWidth - 1), locationY + (imageHeight - 1)))
 	# Bottom right corner fill
-	
+
+	# The background and image widths and heights all need to sub 1 to convert it to a coordinate on the x-y plane!
+
 	return borderedImage
 
+
+def SmoothEdges():
+	print("next up!")
 
 
 
