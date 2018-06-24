@@ -24,33 +24,32 @@ for fileName in inputFiles:
 
 	if CheckImageExists(workingDirectory + "/input/" + fileName) == True:
 
-		product = Image.open(workingDirectory + "/input/" + fileName)
-		productWidth, productHeight = product.size
+		image = Image.open(workingDirectory + "/input/" + fileName)
 
-		backgroundColour = GetBackgroundColour(product)
+		backgroundColour = GetBackgroundColour(image)
 		r, g, b = SeperateRGB(backgroundColour)
 
-		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, product, r, g, b)
+		topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(threshold, image, r, g, b)
 
 		if topPixel and bottomPixel and leftPixel and rightPixel != (0, 0):
-			product = CropImage(topPixel, bottomPixel, leftPixel, rightPixel, product)
-			# Crops the image down to the edges of the product
+			image = CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image)
+			# Crops the image down to the edges of the image
 
-		scaledImage = ScaleImage(product, backgroundWidth, backgroundHeight)
+		image = ScaleImage(image, backgroundWidth, backgroundHeight)
 
-		blendedImage = BlendBackgrounds(scaledImage, backgroundWidth, backgroundHeight)
+		image = BlendBackgrounds(image, backgroundWidth, backgroundHeight)
 
 		if CheckImageExists(workingDirectory + "/logos/logo.png", debug = False) == True:
 			if (logoWidth <= backgroundWidth) and (logoHeight <= backgroundHeight): 
-				blendedImage.paste(logo, ((backgroundWidth - 1) - (logoWidth - 1) - 1, (backgroundHeight - 1) - (logoHeight - 1) - 1))
+				image.paste(logo, ((backgroundWidth - 1) - (logoWidth - 1) - 1, (backgroundHeight - 1) - (logoHeight - 1) - 1))
 				# Pastes the logo onto the bottom right corner
 				# Checks to see if the logo fits onto the background
 			else:
 				print("Logo does not fit onto background!")
 
-		blendedImage.save(workingDirectory + '/output/' + fileName, quality = 100)
+		image.save(workingDirectory + '/output/' + fileName, quality = 100)
 		# Saves the image to the output folder
-
+		image.close()
 		numEdited += 1
 		print(fileName + " has been edited and saved!")
 logo.close()
