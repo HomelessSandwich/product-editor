@@ -33,17 +33,24 @@ def main():
                 topPixel, bottomPixel, leftPixel, rightPixel = FindEdges(
                     threshold, image, r, g, b)
 
-                if (topPixel and bottomPixel and
-                        leftPixel and rightPixel != (0, 0)):
+                if (
+                    topPixel and bottomPixel and
+                    leftPixel and rightPixel != (0, 0)
+                ):
 
                     image = CropImage(
-                        topPixel, bottomPixel, leftPixel, rightPixel, image)
+                        topPixel, bottomPixel,
+                        leftPixel, rightPixel, image
+                    )
                     # Crops the image down to the edges of the image
-
+                image.show()
                 image = ScaleImage(image, backgroundWidth, backgroundHeight)
 
-                image = BlendBackgrounds(image,
-                                         backgroundWidth, backgroundHeight)
+                image = BlendBackgrounds(
+                    image,
+                    backgroundWidth,
+                    backgroundHeight
+                )
 
                 if (CheckImageExists(workingDirectory + "/logos/logo.png",
                                                         debug=False)):
