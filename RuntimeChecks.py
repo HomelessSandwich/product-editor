@@ -43,18 +43,25 @@ def GetUserInputs():
             if backgroundWidth > 10000 or backgroundWidth < 1:
                 raise ValueError
 
-            print(
-                "\n0 is very unsensisitive and 1 is very sensitive "
-                "(use a value close to 1 if the object is close in colour "
-                "to the background)"
-            )
             tolerance = float(
                 input(
-                    "Please enter a tolerance between 0 and 1 "
-                    "(recommened 0.8 for most images): "
+                    "\n(Recommened 0.8 for most images)"
+                    "\n(Increase if not detecting edges)"
+                    "\n(Decrease if detecting too far away from object"
+                    "\nPlease enter a tolerance between 0 and 1: "
                 )
             )
             if tolerance > 1 or tolerance < 0:
+                raise ValueError
+
+            borderPercentage = float(
+                input(
+                    "\n(Recommended 0.05 for most images)"
+                    "\n(Increase if you find objects strechting)"
+                    "\nPlease enter a border percentage between 0 and 1: "
+                )
+            )
+            if borderPercentage > 1 or borderPercentage < 0:
                 raise ValueError
 
             print("\n")
@@ -62,7 +69,7 @@ def GetUserInputs():
         except ValueError:
             print("\nOops! That was not a valid number. Try again...")
             # Throws an error if the user did not enter an integer
-    return backgroundHeight, backgroundWidth, tolerance
+    return backgroundHeight, backgroundWidth, tolerance, borderPercentage
 
 
 def CheckImageExists(directory, debug=True):

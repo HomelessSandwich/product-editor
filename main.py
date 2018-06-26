@@ -18,7 +18,7 @@ def main():
     CheckDirectoryExists(workingDirectory + "/logos")
     inputFiles = GetInputFiles()
 
-    backgroundHeight, backgroundWidth, threshold = GetUserInputs()
+    backgroundHeight, backgroundWidth, threshold, borderPercentage = GetUserInputs()
 
     for fileName in inputFiles:
         # Iterates through all the files within the input folder
@@ -39,8 +39,8 @@ def main():
                 ):
 
                     image = CropImage(
-                        topPixel, bottomPixel,
-                        leftPixel, rightPixel, image
+                        topPixel, bottomPixel, leftPixel, rightPixel,
+                        image, borderPercentage
                     )
                     # Crops the image down to the edges of the image
 

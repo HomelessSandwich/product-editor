@@ -111,9 +111,11 @@ def FindEdges(threshold, image, r, g, b):
     return topPixel, bottomPixel, leftPixel, rightPixel
 
 
-def CropImage(topPixel, bottomPixel, leftPixel, rightPixel, image):
+def CropImage(
+    topPixel, bottomPixel, leftPixel, rightPixel, image, borderPercentage
+):
     leftPixel, topPixel, rightPixel, bottomPixel = GetBufferPixels(
-        topPixel, bottomPixel, leftPixel, rightPixel, image)
+        topPixel, bottomPixel, leftPixel, rightPixel, image, borderPercentage)
     image = image.crop(
         (leftPixel[0], topPixel[1], rightPixel[0], bottomPixel[1])
     )
@@ -160,9 +162,10 @@ def GetBorderPixels(image):
     return redPixels, greenPixels, bluePixels
 
 
-def GetBufferPixels(topPixel, bottomPixel, leftPixel, rightPixel, image):
+def GetBufferPixels(
+    topPixel, bottomPixel, leftPixel, rightPixel, image, borderPercentage
+):
     imageWidth, imageHeight = image.size
-    borderPercentage = 0.05
 
     if leftPixel[0] - round(borderPercentage * imageWidth) >= 0:
         leftPixel = (
