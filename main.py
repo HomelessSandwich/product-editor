@@ -43,7 +43,7 @@ def main():
                         leftPixel, rightPixel, image
                     )
                     # Crops the image down to the edges of the image
-                image.show()
+
                 image = ScaleImage(image, backgroundWidth, backgroundHeight)
 
                 image = BlendBackgrounds(
